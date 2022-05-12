@@ -48,14 +48,14 @@ extension TopAlert {
             }
         }
         
-        public init(title: String, message: String? = nil, buttons: [ButtonType]? = nil, style: UIAlertController.Style = .alert) {
+        public init(title: String?, message: String? = nil, buttons: [ButtonType]? = nil, style: UIAlertController.Style = .alert) {
             self.title = title
             self.message = message
             self.buttons = buttons
             self.style = style
         }
         
-        public init(title: String, message: String? = nil, style: UIAlertController.Style = .alert, action: @escaping () -> ()) {
+        public init(title: String?, message: String? = nil, style: UIAlertController.Style = .alert, action: @escaping () -> ()) {
             self.title = title
             self.message = message
             self.buttons = [.ok(action: action)]
