@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "TopAlert",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v13)
     ],

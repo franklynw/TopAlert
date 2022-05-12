@@ -44,8 +44,9 @@ class TopAlertPresenter {
             window?.makeKeyAndVisible()
             
             let alertController = UIAlertController(title: alertConfig.title, message: alertConfig.message, preferredStyle: alertConfig.style)
+            let buttons = alertConfig.buttons ?? [.ok()]
             
-            alertConfig.buttons.forEach {
+            buttons.forEach {
                 let action = $0.alertAction {
                     finished()
                 }
