@@ -61,5 +61,35 @@ extension TopAlert {
             self.buttons = [.ok(action: action)]
             self.style = style
         }
+        
+        public func withFinishedAction(_ finishedAction: @escaping () -> ()) -> Self {
+
+            let buttons: [ButtonType]? = self.buttons?.map {
+                switch $0 {
+                case .`default`(let title, let action):
+                    return .`default`(title: title) {
+                        action()
+                        finishedAction()
+                    }
+                case .destructive(let title, let action):
+                    return .destructive(title: title) {
+                        action()
+                        finishedAction()
+                    }
+                case .ok(let action):
+                    return .ok {
+                        action()
+                        finishedAction()
+                    }
+                case .cancel(let action):
+                    return .cancel {
+                        action()
+                        finishedAction()
+                    }
+                }
+            }
+            
+            return .init(title: title, message: message, buttons: buttons, style: style)
+        }
     }
 }
