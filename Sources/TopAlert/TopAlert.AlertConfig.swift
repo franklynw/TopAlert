@@ -10,12 +10,12 @@ import SwiftUI
 
 extension TopAlert {
     
-    public class AlertConfig {
+    public struct AlertConfig {
         let title: String?
         let message: String?
         let buttons: [ButtonType]?
         let style: UIAlertController.Style
-        var finishedAction: (() -> ())?
+        let finishedAction: (() -> ())?
         
         public enum ButtonType {
             case `default`(title: String, action: () -> () = {})
@@ -49,22 +49,29 @@ extension TopAlert {
             }
         }
         
-        public init(title: String?, message: String? = nil, buttons: [ButtonType]? = nil, style: UIAlertController.Style = .alert) {
-            self.title = title
-            self.message = message
-            self.buttons = buttons
-            self.style = style
+        /// If we want to add a finished action after the config has been created (eg, if it's been passed along & is going into an operation queue, we might want to pass in a closure which tells the operation it's done)
+        public func withFinishedAction(_ finishedAction: @escaping () -> ()) -> Self {
+            return AlertConfig(title: title, message: message, buttons: buttons, style: style, finishedAction: finishedAction)
         }
-        
-        public init(title: String?, message: String? = nil, style: UIAlertController.Style = .alert, action: @escaping () -> ()) {
-            self.title = title
-            self.message = message
-            self.buttons = [.ok(action: action)]
-            self.style = style
-        }
-        
-        public func addFinishedAction(_ finishedAction: @escaping () -> ()) {
-            self.finishedAction = finishedAction
-        }
+    }
+}
+
+
+public extension TopAlert.AlertConfig {
+    
+    init(title: String?, message: String? = nil, buttons: [ButtonType]? = nil, style: UIAlertController.Style = .alert, finished: (() -> ())? = nil) {
+        self.title = title
+        self.message = message
+        self.buttons = buttons
+        self.style = style
+        self.finishedAction = finished
+    }
+    
+    init(title: String?, message: String? = nil, style: UIAlertController.Style = .alert, action: @escaping () -> (), finished: (() -> ())? = nil) {
+        self.title = title
+        self.message = message
+        self.buttons = [.ok(action: action)]
+        self.style = style
+        self.finishedAction = finished
     }
 }

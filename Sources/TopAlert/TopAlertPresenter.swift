@@ -48,7 +48,6 @@ class TopAlertPresenter {
             
             buttons.forEach {
                 let action = $0.alertAction {
-                    alertConfig.finishedAction?()
                     finished()
                 }
                 alertController.addAction(action)
@@ -82,6 +81,7 @@ class TopAlertPresenter {
         } completion: { _ in
             window = nil
             viewController = nil
+            parent?.alertConfig?.finishedAction?()
             parent?.alertConfig = nil
         }
     }
