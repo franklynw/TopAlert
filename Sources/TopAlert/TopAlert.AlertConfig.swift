@@ -10,11 +10,12 @@ import SwiftUI
 
 extension TopAlert {
     
-    public struct AlertConfig {
+    public class AlertConfig {
         let title: String?
         let message: String?
         let buttons: [ButtonType]?
         let style: UIAlertController.Style
+        var finishedAction: (() -> ())?
         
         public enum ButtonType {
             case `default`(title: String, action: () -> () = {})
@@ -22,7 +23,7 @@ extension TopAlert {
             case ok(action: () -> () = {})
             case cancel(action: () -> () = {})
             
-            func alertAction(withFinished finished: @escaping () -> ()) -> UIAlertAction {
+            internal func alertAction(withFinished finished: @escaping () -> ()) -> UIAlertAction {
                 switch self {
                 case .default(let title, let action):
                     return UIAlertAction(title: title, style: .default) { _ in
@@ -62,34 +63,8 @@ extension TopAlert {
             self.style = style
         }
         
-        public func withFinishedAction(_ finishedAction: @escaping () -> ()) -> Self {
-
-            let buttons: [ButtonType]? = self.buttons?.map {
-                switch $0 {
-                case .`default`(let title, let action):
-                    return .`default`(title: title) {
-                        action()
-                        finishedAction()
-                    }
-                case .destructive(let title, let action):
-                    return .destructive(title: title) {
-                        action()
-                        finishedAction()
-                    }
-                case .ok(let action):
-                    return .ok {
-                        action()
-                        finishedAction()
-                    }
-                case .cancel(let action):
-                    return .cancel {
-                        action()
-                        finishedAction()
-                    }
-                }
-            }
-            
-            return .init(title: title, message: message, buttons: buttons, style: style)
+        public func addFinishedAction(_ finishedAction: @escaping () -> ()) {
+            self.finishedAction = finishedAction
         }
     }
 }
