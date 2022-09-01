@@ -20,8 +20,8 @@ extension TopAlert {
         public enum ButtonType {
             case `default`(title: String, action: () -> () = {})
             case destructive(title: String, action: () -> () = {})
-            case ok(action: () -> () = {})
-            case cancel(action: () -> () = {})
+            case ok(title: String? = nil, action: () -> () = {})
+            case cancel(title: String? = nil, action: () -> () = {})
             
             internal func alertAction(withFinished finished: @escaping () -> ()) -> UIAlertAction {
                 switch self {
@@ -35,13 +35,13 @@ extension TopAlert {
                         action()
                         finished()
                     }
-                case .ok(let action):
-                    return UIAlertAction(title: NSLocalizedString("OK", bundle: .module, comment: "OK"), style: .default) { _ in
+                case .ok(let title, let action):
+                    return UIAlertAction(title: title ?? NSLocalizedString("OK", bundle: .module, comment: "OK"), style: .default) { _ in
                         action()
                         finished()
                     }
-                case .cancel(let action):
-                    return UIAlertAction(title: NSLocalizedString("Cancel", bundle: .module, comment: "OK"), style: .cancel) { _ in
+                case .cancel(let title, let action):
+                    return UIAlertAction(title: title ?? NSLocalizedString("Cancel", bundle: .module, comment: "OK"), style: .cancel) { _ in
                         action()
                         finished()
                     }
