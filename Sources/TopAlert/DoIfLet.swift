@@ -22,7 +22,9 @@ struct DoIfLet<T>: View {
     var body: some View {
         
         return IfLet(binding) { item -> EmptyView in
-            self.action(item)
+            DispatchQueue.main.async {
+                self.action(item)
+            }
             return EmptyView()
         }
     }

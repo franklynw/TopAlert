@@ -19,14 +19,22 @@ extension TopAlert {
         
         public enum ButtonType {
             case `default`(title: String, action: () -> () = {})
+            case defaultBold(title: String, action: () -> () = {})
             case destructive(title: String, action: () -> () = {})
             case ok(title: String? = nil, action: () -> () = {})
+            case okLight(title: String? = nil, action: () -> () = {})
             case cancel(title: String? = nil, action: () -> () = {})
+            case cancelBold(title: String? = nil, action: () -> () = {})
             
             internal func alertAction(withFinished finished: @escaping () -> ()) -> UIAlertAction {
                 switch self {
                 case .default(let title, let action):
                     return UIAlertAction(title: title, style: .default) { _ in
+                        action()
+                        finished()
+                    }
+                case .defaultBold(let title, let action):
+                    return UIAlertAction(title: title, style: .cancel) { _ in
                         action()
                         finished()
                     }
@@ -36,12 +44,22 @@ extension TopAlert {
                         finished()
                     }
                 case .ok(let title, let action):
+                    return UIAlertAction(title: title ?? NSLocalizedString("OK", bundle: .module, comment: "OK"), style: .cancel) { _ in
+                        action()
+                        finished()
+                    }
+                case .okLight(let title, let action):
                     return UIAlertAction(title: title ?? NSLocalizedString("OK", bundle: .module, comment: "OK"), style: .default) { _ in
                         action()
                         finished()
                     }
                 case .cancel(let title, let action):
-                    return UIAlertAction(title: title ?? NSLocalizedString("Cancel", bundle: .module, comment: "OK"), style: .cancel) { _ in
+                    return UIAlertAction(title: title ?? NSLocalizedString("Cancel", bundle: .module, comment: "Cancel"), style: .default) { _ in
+                        action()
+                        finished()
+                    }
+                case .cancelBold(let title, let action):
+                    return UIAlertAction(title: title ?? NSLocalizedString("Cancel", bundle: .module, comment: "Cancel"), style: .cancel) { _ in
                         action()
                         finished()
                     }
